@@ -32,7 +32,7 @@ public class Calender {
         while (true) {
             month = getMonth();
             if (month == -1) break;
-
+            else if (month > 12 || month < 1) continue;
             maxDay = calender.getLastDaysOfMonth(month);
             System.out.println(month + "월은 " + maxDay + "일까지 있습니다.");
         }
