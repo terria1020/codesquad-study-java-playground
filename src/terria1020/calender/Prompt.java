@@ -24,7 +24,7 @@ public class Prompt {
             if (month == -1) break;
             else if (month < 1 || month > 12) continue;
 
-            calender.printCalender();
+            calender.printCalender(month);
         }
         printMotd();
     }

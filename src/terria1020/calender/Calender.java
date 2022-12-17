@@ -1,5 +1,6 @@
 package terria1020.calender;
 
+import java.time.LocalDateTime;
 import java.util.Scanner;
 
 public class Calender {
@@ -11,14 +12,22 @@ public class Calender {
         return MAX_DAYS[month - 1];
     }
 
-    public void printCalender() {
-        System.out.println("일 월 화 수 목 금 토");
+
+    public void printCalender(int month) {
+        int year = LocalDateTime.now().getYear();
+
+        System.out.printf("\t<%4d년%3d월>", year, month);
+        System.out.println();
+        System.out.println(" 일  월  화  수  목  금  토");
         System.out.println("---------------------");
-        System.out.println(" 1 2 3 4 5 6 7");
-        System.out.println(" 8 9 10 11 12 13");
-        System.out.println(" 14 15 16 17 18 19");
-        System.out.println(" 20 21 22 23 24 25");
-        System.out.println(" 26 27 28 29 30 31");
+
+        int lastDay = getLastDaysOfMonth(month);
+
+        for (int i = 1; i <= lastDay; i++) {
+            System.out.printf("%3d", i);
+            if (i % 7 == 0) System.out.println();
+        }
+        System.out.println();
     }
 
     @Deprecated
