@@ -10,28 +10,22 @@ public class Calender {
 
     private static final int LEAP_DAY = 29;
 
-    private int year;
-
-    public Calender() {
-        year = LocalDateTime.now().getYear();
-    }
-
-    public boolean isLeapYear() {
+    public boolean isLeapYear(int year) {
         return (year % 4 == 0) && (year % 100 != 0 || year % 400 == 0);
     }
 
-    public int getLastDaysOfMonth(int month) {
-        if (isLeapYear() && month == 2) return LEAP_DAY;
+    public int getLastDaysOfMonth(int year, int month) {
+        if (isLeapYear(year) && month == 2) return LEAP_DAY;
         return MAX_DAYS[month - 1];
     }
 
-    public void printCalender(int month) {
+    public void printCalender(int year, int month) {
         System.out.printf("\t<%4d년%3d월>", year, month);
         System.out.println();
         System.out.println(" 일  월  화  수  목  금  토");
         System.out.println("---------------------");
 
-        int lastDay = getLastDaysOfMonth(month);
+        int lastDay = getLastDaysOfMonth(year, month);
 
         for (int i = 1; i <= lastDay; i++) {
             System.out.printf("%3d", i);
