@@ -26,6 +26,8 @@ public class Prompt {
             System.out.println("년도를 입력하세요.");
             System.out.print(env.PS2);
             year = input();
+            if (year == -1) break;
+
             System.out.println("달을 입력하세요");
             System.out.print(env.PS3);
             month = input();
@@ -38,16 +40,10 @@ public class Prompt {
         printMotd();
     }
 
-    @Deprecated
-    public void inputMonth() {
-        month = scanner.nextInt();
-        scanner.nextLine();
-    }
-
     public int input() {
         int inputNumber = scanner.nextInt();
         scanner.nextLine();
-        return  inputNumber;
+        return inputNumber;
     }
 
     public void printMotd() {
