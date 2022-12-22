@@ -1,7 +1,8 @@
 package terria1020.calender;
 
+import java.lang.reflect.Array;
 import java.time.LocalDateTime;
-import java.util.Scanner;
+import java.util.*;
 
 public class Calender {
     private static final int[] MAX_DAYS = {
@@ -21,6 +22,12 @@ public class Calender {
     private static final firstDayDate STD_DATE = firstDayDate.SUN; // 2000.1.1 == Sunday
 
     private static final int LEAP_DAY = 29;
+
+    private HashMap<String, String> schedule;
+
+    public Calender() {
+        schedule = new HashMap<>();
+    }
 
     public boolean isLeapYear(int year) {
         return (year % 4 == 0) && (year % 100 != 0 || year % 400 == 0);
@@ -52,6 +59,8 @@ public class Calender {
     }
 
     public void printCalender(int year, int month) {
+        boolean[] haveSchedules = new boolean[7];
+
         System.out.printf("\t<%4d년%3d월>", year, month);
         System.out.println();
         for (String c : DATE) System.out.printf("%3s", c);
@@ -68,10 +77,45 @@ public class Calender {
         }
 
         for (int i = 1; i <= lastDay; i++) {
+            String date = year + "-" + month + "-" + i;
             System.out.printf("%3d", i);
+            haveSchedules[escapecnt] = hasSchedule(date);
             escapecnt = (escapecnt + 1) % 7;
-            if (escapecnt == 0) System.out.println();
+            if (escapecnt == 0) {
+                System.out.println();
+                printCalSchedule(pushcnt, haveSchedules);
+                Arrays.fill(haveSchedules, false);
+                pushcnt = 0;
+            }
         }
         System.out.println();
+    }
+
+    private void printCalSchedule(int pushcnt, boolean[] haveSchedules) {
+        for (int i = 0; i < 7; i++) {
+            if (haveSchedules[i]) System.out.printf("%3c", '\'');
+            else System.out.printf("%3c", ' ');
+        }
+        System.out.println();
+    }
+
+    public boolean addSchedule(String date, String message) {
+        if (schedule.containsKey(date)) {
+            if (schedule.get(date).equals(message)) return false;
+            String value = schedule.get(date);
+            value += "\n" + message;
+            return true;
+        }
+        schedule.put(date, message);
+        return true;
+    }
+
+    public Optional<String> getSchedule(String date) {
+        return Optional.ofNullable(schedule.get(date));
+    }
+
+    public boolean hasSchedule(String date) {
+        boolean result = schedule.containsKey(date);
+        return result;
     }
 }

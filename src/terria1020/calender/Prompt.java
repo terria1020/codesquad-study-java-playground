@@ -1,6 +1,7 @@
 package terria1020.calender;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class Prompt {
@@ -24,7 +25,8 @@ public class Prompt {
         String PS1 = "cal > ";
         String PS2 = "year > ";
         String PS3 = "month > ";
-
+        String PS4 = "date > ";
+        String PS5 = "message > ";
         String HELP = "1. 특정 날짜에 일정을 등록합니다." +
                 "\n2. 특정 날짜에 일정이 등록되어 있는지 검색합니다." +
                 "\n3. 현재 날짜의 이번 달 달력을 출력합니다." +
@@ -40,10 +42,15 @@ public class Prompt {
 
     public void run() {
         char menu;
+        String input;
         while (true) {
             System.out.println(env.CONSOLE);
             System.out.print(env.PS1);
-            menu = scanner.nextLine().charAt(0);
+
+            input = scanner.nextLine();
+            if (input.length() != 1) continue;
+
+            menu = input.charAt(0);
 
             if (menu == '1') scheduleSign();
             else if (menu == '2') searchSchedule();
@@ -56,11 +63,39 @@ public class Prompt {
     }
 
     public void scheduleSign() {
+        String date;
+        String message;
 
+        System.out.println("[일정 등록] 날짜를 입력하세요.");
+        System.out.println(env.PS4);
+        date = scanner.nextLine();
+
+        System.out.println("[일정 등록] 일정을 입력하세요.");
+        System.out.println(env.PS5);
+        message = scanner.nextLine();
+
+        if (!calender.addSchedule(date, message)) {
+            System.out.println("이미 등록 된 일정입니다.");
+            return;
+        }
+        System.out.println("일정이 등록되었습니다.");
     }
 
     public void searchSchedule() {
+        String date;
 
+        System.out.println("[일정 검색] 날짜를 입력하세요.");
+        System.out.println(env.PS4);
+        date = scanner.nextLine();
+        date = date.strip();
+
+        Optional<String> schedule = calender.getSchedule(date);
+
+        if (!schedule.isPresent()) {
+            System.out.println("등록된 일정이 없습니다.");
+            return;
+        }
+        System.out.println(schedule.get());
     }
 
     public void showTodayCalender() {
