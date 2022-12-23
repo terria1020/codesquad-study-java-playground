@@ -10,7 +10,7 @@ public class Calender {
     };
 
     private static final String[] DATE = {
-            "MO", "TU", "WE", "TU", "FR", "SA", "SN"
+            "SN", "MO", "TW", "WE", "TH", "FR", "SA"
     };
 
     private enum firstDayDate {
