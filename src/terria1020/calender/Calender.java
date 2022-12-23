@@ -3,6 +3,7 @@ package terria1020.calender;
 import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class Calender {
@@ -79,20 +80,23 @@ public class Calender {
 
         for (int i = 1; i <= lastDay; i++) {
             String date = year + "-" + month + "-" + i;
+            LocalDate localDate = LocalDate.parse(
+                    String.join("-", String.valueOf(year), String.valueOf(month), String.valueOf(i)),
+                    DateTimeFormatter.ofPattern("yyyy-M-d")
+            );
             System.out.printf("%3d", i);
-            haveSchedules[escapecnt] = hasSchedule(date);
+            haveSchedules[escapecnt] = hasSchedule(localDate);
             escapecnt = (escapecnt + 1) % 7;
             if (escapecnt == 0) {
                 System.out.println();
-                printCalSchedule(pushcnt, haveSchedules);
+                printCalSchedule(haveSchedules);
                 Arrays.fill(haveSchedules, false);
-                pushcnt = 0;
             }
         }
         System.out.println();
     }
 
-    private void printCalSchedule(int pushcnt, boolean[] haveSchedules) {
+    private void printCalSchedule(boolean[] haveSchedules) {
         for (int i = 0; i < 7; i++) {
             if (haveSchedules[i]) System.out.printf("%3c", '\'');
             else System.out.printf("%3c", ' ');
@@ -117,7 +121,7 @@ public class Calender {
         return Optional.ofNullable(schedule.get(date));
     }
 
-    public boolean hasSchedule(String date) {
+    public boolean hasSchedule(LocalDate date) {
         boolean result = schedule.containsKey(date);
         return result;
     }
