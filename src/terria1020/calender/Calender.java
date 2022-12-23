@@ -104,6 +104,8 @@ public class Calender {
             if (schedule.get(date).equals(message)) return false;
             String value = schedule.get(date);
             value += "\n" + message;
+
+            schedule.put(date, value);
             return true;
         }
         schedule.put(date, message);
