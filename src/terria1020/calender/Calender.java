@@ -1,8 +1,6 @@
 package terria1020.calender;
 
-import java.lang.reflect.Array;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -25,10 +23,10 @@ public class Calender {
 
     private static final int LEAP_DAY = 29;
 
-    private HashMap<LocalDate, String> schedule;
+    private ArrayList<Schedule> schedules;
 
     public Calender() {
-        schedule = new HashMap<>();
+        schedules = new ArrayList<>();
     }
 
     public boolean isLeapYear(int year) {
@@ -105,24 +103,25 @@ public class Calender {
     }
 
     public boolean addSchedule(LocalDate date, String message) {
-        if (schedule.containsKey(date)) {
-            if (schedule.get(date).equals(message)) return false;
-            String value = schedule.get(date);
-            value += "\n" + message;
-
-            schedule.put(date, value);
+        Optional<Schedule> found = getSchedule(date);
+        if (found.isPresent()) {
+            found.get().editMessage(message);
             return true;
         }
-        schedule.put(date, message);
+        schedules.add(new Schedule(date, message));
         return true;
     }
 
-    public Optional<String> getSchedule(LocalDate date) {
-        return Optional.ofNullable(schedule.get(date));
+    public Optional<Schedule> getSchedule(LocalDate date) {
+        Optional<Schedule> found = schedules.stream().filter(schedule -> {
+                    return schedule.getDate().equals(date);
+                })
+                .findFirst();
+        return found;
     }
 
     public boolean hasSchedule(LocalDate date) {
-        boolean result = schedule.containsKey(date);
+        boolean result = getSchedule(date).isPresent();
         return result;
     }
 }

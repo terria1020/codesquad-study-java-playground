@@ -3,7 +3,6 @@ package terria1020.calender;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
 import java.util.Optional;
 import java.util.Scanner;
@@ -97,13 +96,13 @@ public class Prompt {
 
         LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-M-d"));
 
-        Optional<String> schedule = calender.getSchedule(localDate);
+        Optional<Schedule> schedule = calender.getSchedule(localDate);
 
         if (!schedule.isPresent()) {
             System.out.println("등록된 일정이 없습니다.");
             return;
         }
-        System.out.println(schedule.get());
+        System.out.println(schedule.get().showMessage());
     }
 
     public void showTodayCalender() {
