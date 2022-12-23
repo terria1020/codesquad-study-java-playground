@@ -1,6 +1,10 @@
 package terria1020.calender;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.DateTimeParseException;
 import java.util.Optional;
 import java.util.Scanner;
 
@@ -62,34 +66,38 @@ public class Prompt {
         printMotd();
     }
 
-    public void scheduleSign() {
+    public void scheduleSign() throws DateTimeParseException {
         String date;
         String message;
+        LocalDate localDate;
 
         System.out.println("[일정 등록] 날짜를 입력하세요.");
-        System.out.println(env.PS4);
+        System.out.print(env.PS4);
         date = scanner.nextLine();
+        localDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-M-d"));
 
         System.out.println("[일정 등록] 일정을 입력하세요.");
-        System.out.println(env.PS5);
+        System.out.print(env.PS5);
         message = scanner.nextLine();
 
-        if (!calender.addSchedule(date, message)) {
+        if (!calender.addSchedule(localDate, message)) {
             System.out.println("이미 등록 된 일정입니다.");
             return;
         }
         System.out.println("일정이 등록되었습니다.");
     }
 
-    public void searchSchedule() {
+    public void searchSchedule() throws DateTimeParseException {
         String date;
 
         System.out.println("[일정 검색] 날짜를 입력하세요.");
-        System.out.println(env.PS4);
+        System.out.print(env.PS4);
         date = scanner.nextLine();
         date = date.strip();
 
-        Optional<String> schedule = calender.getSchedule(date);
+        LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-M-d"));
+
+        Optional<String> schedule = calender.getSchedule(localDate);
 
         if (!schedule.isPresent()) {
             System.out.println("등록된 일정이 없습니다.");
