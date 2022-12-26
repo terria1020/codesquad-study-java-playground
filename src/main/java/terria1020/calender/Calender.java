@@ -1,10 +1,17 @@
 package terria1020.calender;
 
+import terria1020.calender.dbconnecttion.DatabaseConnector;
+
+import java.sql.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class Calender {
+    public static final String FORMAT_PATTERN = "yyyy-M-d";
+
+    private static final String DB_PATH = "/Users/jaehan1346/IdeaProjects/codesquad-study-java-playground/database/schedule.sqlite";
+
     private static final int[] MAX_DAYS = {
             31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
     };
@@ -24,9 +31,11 @@ public class Calender {
     private static final int LEAP_DAY = 29;
 
     private ArrayList<Schedule> schedules;
+    DatabaseConnector dbConnector;
 
     public Calender() {
-        schedules = new ArrayList<>();
+        dbConnector = new DatabaseConnector(DB_PATH);
+        schedules = getAllSchedules();
     }
 
     public boolean isLeapYear(int year) {
@@ -59,6 +68,7 @@ public class Calender {
     }
 
     public void printCalender(int year, int month) {
+        syncSchedules();
         boolean[] haveSchedules = new boolean[7];
 
         System.out.printf("\t<%4d년%3d월>", year, month);
@@ -102,6 +112,7 @@ public class Calender {
         System.out.println();
     }
 
+    @Deprecated
     public boolean addSchedule(LocalDate date, String message) {
         Optional<Schedule> found = getSchedule(date);
         if (found.isPresent()) {
@@ -110,6 +121,41 @@ public class Calender {
         }
         schedules.add(new Schedule(date, message));
         return true;
+    }
+
+    public boolean addSchedule2(LocalDate date, String message) {
+        syncSchedules();
+        Optional<Schedule> found = getSchedule(date);
+        if (found.isPresent()) {
+            message = found.get().editMessage(message).getMessage();
+            try {
+                PreparedStatement statement = dbConnector.getConn().prepareStatement("select id from schedule where schedule_date=?");
+                statement.setString(1, date.toString());
+                int id = statement.executeQuery().getInt("id");
+                statement.close();
+
+                String sql = "update schedule set message=? where id=?";
+                statement = dbConnector.getConn().prepareStatement(sql);
+                statement.setString(1, message);
+                statement.setInt(2, id);
+
+                return statement.execute();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            try {
+                String sql = "insert into schedule values(null, ?, ?)";
+                PreparedStatement statement = dbConnector.getConn().prepareStatement(sql);
+
+                statement.setString(1, date.toString());
+                statement.setString(2, message);
+
+                return statement.execute();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     public Optional<Schedule> getSchedule(LocalDate date) {
@@ -123,5 +169,34 @@ public class Calender {
     public boolean hasSchedule(LocalDate date) {
         boolean result = getSchedule(date).isPresent();
         return result;
+    }
+
+    private ArrayList<Schedule> getAllSchedules() {
+        dbConnector.connect();
+        Connection conn = dbConnector.getConn();
+        ArrayList<ScheduleDto> dtos = new ArrayList<>();
+        ArrayList<Schedule> allSchedules = new ArrayList<>();
+
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet resultSet = stmt.executeQuery("select * from schedule");
+
+            while (resultSet.next()) {
+                dtos.add(new ScheduleDto(resultSet));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        dtos.stream().forEach(
+                scheduleDto -> allSchedules.add(scheduleDto.toSchedule())
+        );
+
+        return allSchedules;
+    }
+
+    public void syncSchedules() {
+        this.schedules = getAllSchedules();
     }
 }

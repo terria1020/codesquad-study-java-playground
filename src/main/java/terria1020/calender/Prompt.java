@@ -73,16 +73,13 @@ public class Prompt {
         System.out.println("[일정 등록] 날짜를 입력하세요.");
         System.out.print(env.PS4);
         date = scanner.nextLine();
-        localDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-M-d"));
+        localDate = LocalDate.parse(date, DateTimeFormatter.ofPattern(Calender.FORMAT_PATTERN));
 
         System.out.println("[일정 등록] 일정을 입력하세요.");
         System.out.print(env.PS5);
         message = scanner.nextLine();
 
-        if (!calender.addSchedule(localDate, message)) {
-            System.out.println("이미 등록 된 일정입니다.");
-            return;
-        }
+        calender.addSchedule2(localDate, message);
         System.out.println("일정이 등록되었습니다.");
     }
 
@@ -94,7 +91,7 @@ public class Prompt {
         date = scanner.nextLine();
         date = date.strip();
 
-        LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-M-d"));
+        LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ofPattern(Calender.FORMAT_PATTERN));
 
         Optional<Schedule> schedule = calender.getSchedule(localDate);
 
