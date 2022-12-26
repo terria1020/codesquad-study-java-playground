@@ -20,9 +20,9 @@ public class Schedule {
         this.message = message;
     }
 
-    public void editMessage(String message) {
-        if (this.message.equals(message)) return;
-        this.message = this.message + "\n" + message;
+    public Schedule editMessage(String message) {
+        if (!this.message.equals(message)) this.message = this.message + ", " + message;
+        return this;
     }
 
     public String showMessage() {
@@ -36,4 +36,5 @@ public class Schedule {
     public LocalDate getDate() {
         return this.date;
     }
+    public String getMessage() { return this.message; }
 }
