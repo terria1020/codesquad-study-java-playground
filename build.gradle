@@ -21,6 +21,9 @@ dependencies {
     implementation 'org.xerial:sqlite-jdbc:3.36.0.3'
     testImplementation 'junit:junit:4.13.1'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
+    // https://mvnrepository.com/artifact/org.projectlombok/lombok
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.12'
+
 }
 
 jar {
