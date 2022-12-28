@@ -112,18 +112,7 @@ public class Calender {
         System.out.println();
     }
 
-    @Deprecated
     public boolean addSchedule(LocalDate date, String message) {
-        Optional<Schedule> found = getSchedule(date);
-        if (found.isPresent()) {
-            found.get().editMessage(message);
-            return true;
-        }
-        schedules.add(new Schedule(date, message));
-        return true;
-    }
-
-    public boolean addSchedule2(LocalDate date, String message) {
         syncSchedules();
         Optional<Schedule> found = getSchedule(date);
         if (found.isPresent()) {

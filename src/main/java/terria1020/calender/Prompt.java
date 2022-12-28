@@ -79,7 +79,7 @@ public class Prompt {
         System.out.print(env.PS5);
         message = scanner.nextLine();
 
-        calender.addSchedule2(localDate, message);
+        calender.addSchedule(localDate, message);
         System.out.println("일정이 등록되었습니다.");
     }
 
