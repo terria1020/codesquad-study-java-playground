@@ -1,7 +1,9 @@
 package terria1020.calender.dbconnecttion;
 
+import org.junit.After;
 import org.junit.Test;
 
+import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -10,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class DatabaseConnectorTest {
 
     DatabaseConnector connector;
-    private static final String DB_PATH = "/Users/jaehan1346/IdeaProjects/codesquad-study-java-playground/database/schedule.sqlite";
+    private static final String DB_PATH = "schedule.sqlite";
 
     @Test
     public void connect() throws SQLException {
@@ -25,12 +27,18 @@ public class DatabaseConnectorTest {
                 connector.getConn(),
                 null
         );
+    }
 
-        ResultSet resultSet = connector.getConn().createStatement().executeQuery("select * from schedule");
-        assertEquals(
-                resultSet.getString("schedule_date"),
-                "2022-12-1"
-        );
+    @After
+    public void tearDown() throws Exception {
+        connector = null;
+    }
+
+    @Test
+    public void init() {
+        connector = new DatabaseConnector(DB_PATH);
+        File file = new File(DB_PATH);
+        assertEquals(file.exists(), true);
 
     }
 
