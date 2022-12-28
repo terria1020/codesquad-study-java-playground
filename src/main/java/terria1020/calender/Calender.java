@@ -10,7 +10,7 @@ import java.util.*;
 public class Calender {
     public static final String FORMAT_PATTERN = "yyyy-M-d";
 
-    private static final String DB_PATH = "/Users/jaehan1346/IdeaProjects/codesquad-study-java-playground/database/schedule.sqlite";
+    private static final String DB_PATH = "schedule.sqlite";
 
     private static final int[] MAX_DAYS = {
             31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
