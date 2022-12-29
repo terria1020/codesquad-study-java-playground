@@ -95,7 +95,7 @@ public class Calender {
                     DateTimeFormatter.ofPattern("yyyy-M-d")
             );
             System.out.printf("%3d", i);
-            haveSchedules[escapecnt] = hasSchedule(localDate);
+            haveSchedules[escapecnt] = getSchedule(localDate).isPresent();
             escapecnt = (escapecnt + 1) % 7;
             if (escapecnt == 0) {
                 System.out.println();
@@ -155,11 +155,6 @@ public class Calender {
                 })
                 .findFirst();
         return found;
-    }
-
-    public boolean hasSchedule(LocalDate date) {
-        boolean result = getSchedule(date).isPresent();
-        return result;
     }
 
     public void syncSchedules() {
