@@ -4,7 +4,6 @@ import org.junit.After;
 import org.junit.Test;
 
 import java.io.File;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -32,6 +31,8 @@ public class DatabaseConnectorTest {
     @After
     public void tearDown() throws Exception {
         connector = null;
+        File file = new File(DB_PATH);
+        if (file.exists()) file.delete();
     }
 
     @Test

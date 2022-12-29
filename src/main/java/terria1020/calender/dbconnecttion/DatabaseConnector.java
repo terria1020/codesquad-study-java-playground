@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.sql.*;
 
 public class DatabaseConnector {
-    private static final String DBFILE_PATH = "jdbc:sqlite:schedule.sqlite";
+
+    private static final String JDBC_PATH = "jdbc:sqlite:";
+    private static final String DBFILE_PATH = "schedule.sqlite";
     Connection conn;
 
     public DatabaseConnector() {
@@ -42,7 +44,7 @@ public class DatabaseConnector {
     public String connect() {
         if (conn == null) {
             try {
-                conn = DriverManager.getConnection(DBFILE_PATH);
+                conn = DriverManager.getConnection(JDBC_PATH + DBFILE_PATH);
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }

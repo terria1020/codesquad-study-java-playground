@@ -29,6 +29,7 @@ public class Calender {
 
         //2000.1.1 == Sunday
     }
+
     private static final int LEAP_DAY = 29;
 
     private ArrayList<Schedule> schedules;
