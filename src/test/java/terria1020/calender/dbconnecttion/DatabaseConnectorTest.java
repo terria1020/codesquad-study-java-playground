@@ -16,7 +16,7 @@ public class DatabaseConnectorTest {
 
     @Test
     public void connect() throws SQLException {
-        connector = new DatabaseConnector(DB_PATH);
+        connector = new DatabaseConnector();
 
         assertEquals(
                 connector.connect(),
@@ -36,7 +36,7 @@ public class DatabaseConnectorTest {
 
     @Test
     public void init() {
-        connector = new DatabaseConnector(DB_PATH);
+        connector = new DatabaseConnector();
         File file = new File(DB_PATH);
         assertEquals(file.exists(), true);
 

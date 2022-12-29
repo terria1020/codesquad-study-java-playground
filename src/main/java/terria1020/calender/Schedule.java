@@ -1,21 +1,21 @@
 package terria1020.calender;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+@AllArgsConstructor
+@NoArgsConstructor
 public class Schedule {
     private LocalDate date;
     private String message;
 
-    public Schedule(LocalDate date, String message) {
-        this.date = date;
-        this.message = message;
-    }
-
     public Schedule(String date, String message) {
         this.date = LocalDate.parse(
                 date,
-                DateTimeFormatter.ofPattern("yyyy-M-d")
+                DateTimeFormatter.ofPattern(Calender.FORMAT_PATTERN)
         );
         this.message = message;
     }

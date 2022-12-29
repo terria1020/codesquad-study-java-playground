@@ -10,8 +10,6 @@ import java.util.*;
 public class Calender {
     public static final String FORMAT_PATTERN = "yyyy-M-d";
 
-    private static final String DB_PATH = "schedule.sqlite";
-
     private static final int[] MAX_DAYS = {
             31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
     };
@@ -20,21 +18,24 @@ public class Calender {
             "SN", "MO", "TW", "WE", "TH", "FR", "SA"
     };
 
-    private enum firstDayDate {
-        MON, TUE, WED, THU, FRI, SAT, SUN
+    private interface STDDAY {
+        enum DayDate {
+            MON, TUE, WED, THU, FRI, SAT, SUN
+        }
+
+        int YEAR = 2000;
+        int MONTH = 1;
+        int DATE = DayDate.SUN.ordinal();
+
+        //2000.1.1 == Sunday
     }
-
-    private static final int STD_YEAR = 2000;
-    private static final int STD_YEAR_MONTH = 1;
-    private static final firstDayDate STD_DATE = firstDayDate.SUN; // 2000.1.1 == Sunday
-
     private static final int LEAP_DAY = 29;
 
     private ArrayList<Schedule> schedules;
-    DatabaseConnector dbConnector;
+    private DatabaseConnector dbConnector;
 
     public Calender() {
-        dbConnector = new DatabaseConnector(DB_PATH);
+        dbConnector = new DatabaseConnector();
         schedules = getAllSchedules();
     }
 
@@ -48,18 +49,18 @@ public class Calender {
     }
 
     public int getPushCnt(int year, int month) {
-        int cnt = STD_DATE.ordinal();
+        int cnt = STDDAY.DATE;
         int yearAdder = 0;
         int monthadder = 0;
 
         //년도에 대한 보정 계산
-        for (int i = STD_YEAR + 1; i <= year; i++) {
+        for (int i = STDDAY.YEAR + 1; i <= year; i++) {
             if (isLeapYear(i - 1)) yearAdder += 2;
             else yearAdder += 1;
         }
         cnt = (cnt + yearAdder) % 7;
 
-        if (month == STD_YEAR_MONTH) return cnt;
+        if (month == STDDAY.MONTH) return cnt;
 
         //달에 대한 보정 계산
         for (int i = 2; i <= month; i++) monthadder += getLastDaysOfMonth(year, i - 1) % 7;
@@ -160,6 +161,10 @@ public class Calender {
         return result;
     }
 
+    public void syncSchedules() {
+        this.schedules = getAllSchedules();
+    }
+
     private ArrayList<Schedule> getAllSchedules() {
         dbConnector.connect();
         Connection conn = dbConnector.getConn();
@@ -185,7 +190,4 @@ public class Calender {
         return allSchedules;
     }
 
-    public void syncSchedules() {
-        this.schedules = getAllSchedules();
-    }
 }
