@@ -5,21 +5,21 @@ import java.io.IOException;
 import java.sql.*;
 
 public class DatabaseConnector {
-    private String databasePath;
+
     private static final String JDBC_PATH = "jdbc:sqlite:";
+    private static final String DBFILE_PATH = "schedule.sqlite";
     Connection conn;
 
-    public DatabaseConnector(String databasePath) {
+    public DatabaseConnector() {
 
         try {
             Class.forName("org.sqlite.JDBC");
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
-        this.databasePath = databasePath;
         conn = null;
 
-        File dbFile = new File(databasePath);
+        File dbFile = new File(DBFILE_PATH);
         if (!dbFile.exists()) init(dbFile);
     }
 
@@ -44,7 +44,7 @@ public class DatabaseConnector {
     public String connect() {
         if (conn == null) {
             try {
-                conn = DriverManager.getConnection(JDBC_PATH + databasePath);
+                conn = DriverManager.getConnection(JDBC_PATH + DBFILE_PATH);
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
