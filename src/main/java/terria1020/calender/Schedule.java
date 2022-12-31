@@ -1,7 +1,6 @@
 package terria1020.calender;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 public class Schedule {
     private LocalDate date;
@@ -9,14 +8,6 @@ public class Schedule {
 
     public Schedule(LocalDate date, String message) {
         this.date = date;
-        this.message = message;
-    }
-
-    public Schedule(String date, String message) {
-        this.date = LocalDate.parse(
-                date,
-                DateTimeFormatter.ofPattern("yyyy-M-d")
-        );
         this.message = message;
     }
 
@@ -29,12 +20,11 @@ public class Schedule {
         return "일정: " + message;
     }
 
-    public boolean isEquals(LocalDate localDate) {
-        return this.date.equals(localDate);
-    }
-
     public LocalDate getDate() {
         return this.date;
     }
-    public String getMessage() { return this.message; }
+
+    public String getMessage() {
+        return this.message;
+    }
 }

@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.InputMismatchException;
 import java.util.Optional;
 import java.util.Scanner;
 
@@ -15,7 +16,7 @@ public class Prompt {
     private Scanner scanner;
     private Calender calender;
 
-    private interface env {
+    private interface ENV {
         String CONSOLE = "+================+" +
                 "\n| 1. 일정 등록" +
                 "\n| 2. 일정 검색" +
@@ -46,21 +47,38 @@ public class Prompt {
     public void run() {
         char menu;
         String input;
-        while (true) {
-            System.out.println(env.CONSOLE);
-            System.out.print(env.PS1);
+        boolean isLoop = true;
+        while (isLoop) {
+            System.out.println(ENV.CONSOLE);
+            System.out.print(ENV.PS1);
 
             input = scanner.nextLine();
             if (input.length() != 1) continue;
 
             menu = input.charAt(0);
 
-            if (menu == '1') scheduleSign();
-            else if (menu == '2') searchSchedule();
-            else if (menu == '3') showTodayCalender();
-            else if (menu == '4') searchCalender();
-            else if (menu == 'h') printHelp();
-            else if (menu == 'q') break;
+            switch (menu) {
+                case '1':
+                    scheduleSign();
+                    break;
+                case '2':
+                    searchSchedule();
+                    break;
+                case '3':
+                    showTodayCalender();
+                    break;
+                case '4':
+                    searchCalender();
+                    break;
+                case 'h':
+                case 'H':
+                    printHelp();
+                    break;
+                case 'q':
+                case 'Q':
+                    isLoop = false;
+                    break;
+            }
         }
         printMotd();
     }
@@ -71,15 +89,15 @@ public class Prompt {
         LocalDate localDate;
 
         System.out.println("[일정 등록] 날짜를 입력하세요.");
-        System.out.print(env.PS4);
+        System.out.print(ENV.PS4);
         date = scanner.nextLine();
         localDate = LocalDate.parse(date, DateTimeFormatter.ofPattern(Calender.FORMAT_PATTERN));
 
         System.out.println("[일정 등록] 일정을 입력하세요.");
-        System.out.print(env.PS5);
+        System.out.print(ENV.PS5);
         message = scanner.nextLine();
 
-        calender.addSchedule2(localDate, message);
+        calender.addSchedule(localDate, message);
         System.out.println("일정이 등록되었습니다.");
     }
 
@@ -87,7 +105,7 @@ public class Prompt {
         String date;
 
         System.out.println("[일정 검색] 날짜를 입력하세요.");
-        System.out.print(env.PS4);
+        System.out.print(ENV.PS4);
         date = scanner.nextLine();
         date = date.strip();
 
@@ -95,7 +113,7 @@ public class Prompt {
 
         Optional<Schedule> schedule = calender.getSchedule(localDate);
 
-        if (!schedule.isPresent()) {
+        if (schedule.isEmpty()) {
             System.out.println("등록된 일정이 없습니다.");
             return;
         }
@@ -109,13 +127,13 @@ public class Prompt {
 
     public void searchCalender() {
         System.out.println("년도를 입력하세요.");
-        System.out.print(env.PS2);
-        year = input();
+        System.out.print(ENV.PS2);
+        year = inputNumber();
         if (year == -1) return;
 
         System.out.println("달을 입력하세요");
-        System.out.print(env.PS3);
-        month = input();
+        System.out.print(ENV.PS3);
+        month = inputNumber();
 
         if (month == -1 || month < 1 || month > 12) return;
 
@@ -123,14 +141,14 @@ public class Prompt {
     }
 
     public void printHelp() {
-        System.out.println(env.HELP);
+        System.out.println(ENV.HELP);
     }
 
     public void printMotd() {
         System.out.println("Bye-!");
     }
 
-    public int input() {
+    public int inputNumber() throws InputMismatchException {
         int inputNumber = scanner.nextInt();
         scanner.nextLine();
         return inputNumber;
